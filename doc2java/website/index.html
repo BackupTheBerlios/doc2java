@@ -1,0 +1,99 @@
+<?xml  version="1.0"  encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+	<title>doc2java</title>
+	<link href="enough.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+	<h1>doc2java</h1>
+	<p>Use doc2java to create Java-source files from JavaDoc.</p>
+	<p>Setter- and getter-methods as well as variables will be
+		created automatically. The documentation itself will also
+		be copied into the source-files.
+	</p>
+	<h2>How to use</h2>
+		<p>Just follow these simple steps:</p>
+		<ol>
+			<li><a href="doc2java.jar">Download</a> the doc2java.jar file.</li>
+			<li>Call <code>java -jar doc2java.jar -R mydocdir</code>  from the command line,
+				where <code>mydocdir</code> is the path to the directory containing the JavaDoc-files.</li>
+			<li>The code will be generated in the current directory.</li>
+		</ol>
+		<p>
+		Obviously you need to have a Java Runtime Environment (1.2 or higher) installed.
+		</p>
+	<h2>Options and parameters</h2>
+		<p>You can give several command-line-paramters.</p>
+		<p>Usage is <code>java -jar doc2java.jar [options] file</code></p>
+		<p><b>Options:</b>
+		<ul>
+			<li><b>-R (or --recursive)</b>: scan all subdirectories as well.</li>
+			<li><b>-o (or --output)</b>: the directory where to write the java files, defaults to the current directory.</li>
+			<li><b>--notodo</b>: write no todo tags into the files.</li>
+			<li><b>--todotag</b>: use the given to-do-tag, defaults to &quot;//TODO&quot;.</li>
+		</ul>
+		</p>
+		<p><b>Parameters:</b>
+		<ul>
+			<li><b>file</b>: either the JavaDoc file or the directory
+				containing the JavaDoc files, which should be processed.</li>
+		</ul>
+		</p>
+		<p><b>Examples:</b>
+		<ul>
+			<li><code>java -jar doc2java.jar MyClass.html</code><br/>
+				creates the source code for the class decribed in MyClass.html.
+			</li>
+			<li><code>java -jar doc2java.jar mydoc</code><br/>
+				creates the source code for all classes described in the directory mydoc.
+			</li>
+			<li><code>java -jar doc2java.jar -R mydoc</code><br/>
+				creates the source code for all classes described in the directory mydoc and its subdirectories.
+			</li>
+			<li><code>java -jar doc2java.jar -R --todotag &quot;//TODO rob&quot; mydoc</code><br/>
+				same as above, but the generated todo-tags will now start with &quot;//TODO rob&quot;.
+			</li>
+			<li><code>java -jar doc2java.jar -R --notodotag mydoc</code><br/>
+				same as above, but the no todo-tags will be generated.
+			</li>
+			<li><code>java -jar doc2java.jar -R --output /home/myname/workspace/myproject/src mydoc</code><br/>
+				creates the source code for all classes described in the directory mydoc and its subdirectories.
+				The source codes will be saved in the directory /home/myname/workspace/myproject/src mydoc.
+			</li>
+		</ul>
+		</p>
+	<h2>Limitations</h2>
+		<p>Currently there are some known issues:
+		<ul>
+			<li>Import statements will not be generated.</li>
+			<li>Inner and anonymous classes will not be generated.</li>
+			<li>See tags will not be split, when there are several references.</li>
+		</ul>
+		</p>
+	<h2>License and Copyright</h2>
+		<p>doc2java is licensed under the
+			<a href="http://www.gnu.org/copyleft/lesser.html">GNU Lesser Public License (LGPL)</a>,
+			so it can be used for non-commercial as well as commercial projects.
+		</p>
+		<p>copyright 2003, 2004 Robert Virkus, robert at enough dot de.
+		</p>
+	<h2>Download</h2>
+		<p>Download doc2java either as <a href="doc2java.jar">binary</a>
+		or from the Developers' site as source code.
+		</p>
+		<p>You can download the latest development snapshot from the
+			<a href="http://cvs.berlios.de/cgi-bin/viewcvs.cgi/doc2java/">cvs-repository</a>.
+		</p>
+	<h2>Developers' site</h2>
+		<p>Please visit <a href="http://developer.berlios.de/projects/doc2java/">http://developer.berlios.de/projects/doc2java/</a> for other resources of the doc2java project.
+		</p>
+		<p><br /><br /><br /></p>
+		<p>The project is hosted by
+			<a href="http://developer.berlios.de">
+				<img src="http://developer.berlios.de/bslogo.php?group_id=0&amp;type=1" width="124" height="32" alt="BerliOS Logo" />
+			</a>
+		</p>
+
+</body>
+</html>

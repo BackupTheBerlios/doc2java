@@ -1,0 +1,37 @@
+<project name="enough-doc2java" default="dist">
+
+<!-- global properties -->
+
+  <path id="thirdparty">
+    <fileset dir="import">
+        <include name="*.jar"/>
+      </fileset>
+  </path>
+
+<!-- single steps, each step can be called via "ant [name]", e.g. "ant clean" -->
+
+<target name="init">
+	<!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create distribution dirs -->
+	<mkdir dir="dist" />
+</target>
+
+
+<target name="dist" depends="init">
+	<jar destfile="dist/doc2java.jar"
+	     basedir="classes"
+	     >
+	     <manifest>
+	     	<attribute name="Main-Class" value="de.enough.doc2java.Doc2Java"/>
+	     </manifest>
+	</jar>
+</target>
+
+<target name="clean" depends="init">
+	<delete dir="build" />
+	<delete dir="dist" />
+</target>
+
+
+</project>
