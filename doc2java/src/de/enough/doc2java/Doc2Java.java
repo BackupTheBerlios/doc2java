@@ -55,6 +55,11 @@ public final class Doc2Java extends Object {
 	static boolean addToDoTags = true;
 	static String toDoTag = "//TODO";
 
+	/**
+	 * Checks the command line arguments and controls the program flow.
+	 * @param args the command line arguments
+	 * @throws IOException when a java-doc file could not be read.
+	 */
 	public static void main(String[] args) throws IOException {
 		if (args.length == 0) {
 			printHelp();
