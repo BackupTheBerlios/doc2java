@@ -9,8 +9,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * <p>parses javadoc files and creates classes based on the found description.</p>
- * <p></p>
+ * <p>Parses javadoc files and creates java sources based on the found descriptions.</p>
+ * <p>This is the main controller and accepts several command
+ * line arguments, which will be printed out when getting the "--help" command. 
+ * </p>
  * <p>copyright enough software 2003</p>
  * <pre>
  *    history
