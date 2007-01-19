@@ -47,6 +47,7 @@ public final class Doc2Java extends Object {
 		INVALID_DOC_FILES.put( "package-summary.html", Boolean.TRUE );
 		INVALID_DOC_FILES.put( "serialized-form.html", Boolean.TRUE );
 		INVALID_DOC_FILES.put( "copyright-notice.html", Boolean.TRUE );
+		INVALID_DOC_FILES.put( "constant-values.html",  Boolean.TRUE );
 
 	}
 	
@@ -319,7 +320,7 @@ public final class Doc2Java extends Object {
 					JavaDocComment comment = new JavaDocComment();
 					variable.setComment( comment );
 					while ( (line = lines.getNext() ) != null  ) {
-						if ( ("<HR>".equals(line))  || ( line.indexOf("= CONSTRUCTOR DETAIL =") != -1)) {
+						if ( ("<HR>".equals(line))  || ( line.indexOf("= CONSTRUCTOR DETAIL =") != -1) || (line.indexOf("= METHOD DETAIL =") != -1)) {
 							break;
 						}
 						 if ( IGNORE_LIST.get( line ) == null ) {
@@ -395,7 +396,7 @@ public final class Doc2Java extends Object {
 					}
 					model.addVariable(variable);
 				} // end of field start
-				if (line.indexOf( "= CONSTRUCTOR DETAIL =") != -1) {
+				if (line.indexOf( "= CONSTRUCTOR DETAIL =") != -1 || (line.indexOf("= METHOD DETAIL =") != -1)) {
 					lines.setStartIndex( lines.getCurrentIndex() + 1);
 					break;
 				}
