@@ -138,5 +138,9 @@ class Method {
 		fieldName =  fieldName.substring( 0, 1 ).toLowerCase() + fieldName.substring( 1 );
 		return fieldName;
 	}
+	
+	public String toString() {
+		return this.definition;
+	}
 
 }

@@ -55,6 +55,7 @@ public final class Doc2Java extends Object {
 	static int numberOfErrors;
 	static boolean addToDoTags = true;
 	static String toDoTag = "//TODO";
+	static boolean isVerbose;
 
 	/**
 	 * Checks the command line arguments and controls the program flow.
@@ -68,7 +69,7 @@ public final class Doc2Java extends Object {
 		}
 		try {
 			long startTime = System.currentTimeMillis();
-			Arguments arguments = new Arguments( args, new String[]{ "-R", "-notodo", "-h", "-?" }, new String[]{ "--recursive", "--notodo", "--help" },
+			Arguments arguments = new Arguments( args, new String[]{ "-R", "-notodo", "-h", "-?", "-v" }, new String[]{ "--recursive", "--notodo", "--help", "--verbose" },
 				new String[]{"-o", "-todotag"}, new String[]{"--output", "--todotag" } );
 			if (arguments.hasFlag("-h", "--help") || arguments.hasFlag("-?", "-?")) {
 				printHelp();
@@ -82,6 +83,7 @@ public final class Doc2Java extends Object {
 			if (arguments.hasFlag( "-notodo", "--notodo")) {
 				Doc2Java.addToDoTags = false;
 			}
+			isVerbose = arguments.hasFlag( "-v", "--verbose" );
 			String tag = arguments.getParameter("-todotag", "--todotag"); 
 			if ( tag != null) {
 				Doc2Java.toDoTag = tag; 
@@ -125,6 +127,9 @@ public final class Doc2Java extends Object {
 	throws IOException 
 	{
 		String dirName = directory.getName();
+		if (isVerbose) {
+			System.out.println("processing directory " + dirName );
+		}
 		if ( (dirName.indexOf("class-use") != -1) || (dirName.indexOf("doc-files") != -1 ) ) {
 			System.out.println("skipping directory [" + directory.getAbsolutePath() + "].");
 			return;
@@ -176,13 +181,16 @@ public final class Doc2Java extends Object {
 	throws IOException 
 	{
 		String filePath = directory + "/" + fileName;
-		System.out.println("processing javadoc file [" + fileName+ "].");
+		System.out.println("processing javadoc file [" + fileName+ "]...");
 		// read file:
 		StringList fileLines = readFile( filePath ); 
 		// parse file:
 		ClassModel model = parseJavaDoc( directory, fileName, fileLines );
 		// write java-file:
 		writeJavaFile( model, outputDirectory );
+		if (isVerbose) {
+			System.out.println("successfully processed javadoc file [" + fileName + "].");
+		}
 		// processing was successful:
 		Doc2Java.numberOfFiles++;
 	}
@@ -208,14 +216,29 @@ public final class Doc2Java extends Object {
 			outputDirectory += "/" + TextUtil.replace(packageName, ".", "/");
 		}
 		File file = new File( outputDirectory + "/" + model.getClassName() + ".java" );
+		if (isVerbose) {
+			System.out.println("writing Java code to " + file.getAbsolutePath() );
+		}
 		FileUtil.writeTextFile(file, lines);
 	}
 
 	protected static final ClassModel parseJavaDoc(String directory, String fileName, StringList lines) {
+		if (isVerbose) {
+			System.out.println("parsing class definition");
+		}
 		ClassModel model = parseClassDefinition( directory, fileName, lines );
+		if (isVerbose) {
+			System.out.println("parsing fields starting at line " + (lines.getCurrentIndex()) );
+		}
 		parseFields( lines, model, false );
+		if (isVerbose) {
+			System.out.println("parsing constructors starting at line " + (lines.getCurrentIndex()) );
+		}
 		parseConstructors( lines, model );
 		// TODO rob: parseInnerClasses( lines, model );
+		if (isVerbose) {
+			System.out.println("parsing methods starting at line " + (lines.getCurrentIndex()) );
+		}
 		parseMethods( lines, model );
 		return model;
 	}
@@ -306,12 +329,18 @@ public final class Doc2Java extends Object {
 		while ( (line = lines.getNext()) != null)  {
 			if (!inFieldDetails) {
 				if (line.indexOf("= FIELD DETAIL =") != -1) {
+					if (isVerbose) {
+						System.out.println("Fields start at line " + lines.getCurrentIndex() );
+					}
 					inFieldDetails = true;
 				} else if (debug) {
 					System.out.println("parseFields: skipping [" + line + "].");
 				}
 			} else {
 				if ("<PRE>".equals(line) ) {
+					if (isVerbose) {
+						System.out.println("Field starts at line " + lines.getCurrentIndex() + ": " + line);
+					}
 					// a new field has been found.
 					String definition = removeTags( lines.getNext() ).trim();
 					Variable variable = new Variable( definition);
@@ -320,7 +349,10 @@ public final class Doc2Java extends Object {
 					JavaDocComment comment = new JavaDocComment();
 					variable.setComment( comment );
 					while ( (line = lines.getNext() ) != null  ) {
-						if ( ("<HR>".equals(line))  || ( line.indexOf("= CONSTRUCTOR DETAIL =") != -1) || (line.indexOf("= METHOD DETAIL =") != -1)) {
+						if ( ("<HR>".equals(line))  || ( line.indexOf("= CONSTRUCTOR DETAIL =") != -1) || (line.indexOf("= METHOD DETAIL =") != -1) || (line.indexOf("= END OF CLASS DATA =") != -1)) {
+							if (isVerbose) {
+								System.out.println("Field ends at line " + lines.getCurrentIndex() + ": " + line );
+							}
 							break;
 						}
 						 if ( IGNORE_LIST.get( line ) == null ) {
@@ -388,18 +420,27 @@ public final class Doc2Java extends Object {
 										value = removeTags( value ).trim();
 										//System.out.println("found value [" + value + "].");
 										variable.setValue(value); 
+										if (isVerbose) {
+											System.out.println("found field value: " + value );
+										}
 										valueSet = true;
 									} 
 								} // when no value has been set so far
 						 	}
 						 }
 					}
+					if (isVerbose) {
+						System.out.println("found variable " + variable);
+					}
 					model.addVariable(variable);
 				} // end of field start
-				if (line.indexOf( "= CONSTRUCTOR DETAIL =") != -1 || (line.indexOf("= METHOD DETAIL =") != -1)) {
+				if (line.indexOf( "= CONSTRUCTOR DETAIL =") != -1 || (line.indexOf("= METHOD DETAIL =") != -1) || (line.indexOf("= END OF CLASS DATA =") != -1)) {
+					if (isVerbose) {
+						System.out.println("end of fields encountered at line " + lines.getCurrentIndex());
+					}
 					lines.setStartIndex( lines.getCurrentIndex() + 1);
 					break;
-				}
+				} 
 			} // within field details
 		} // outer while loop
 	}
@@ -420,6 +461,9 @@ public final class Doc2Java extends Object {
 		while ( (line = lines.getNext()) != null)  {
 			if ("<PRE>".equals(line) ) {
 				// a new method has been found.
+				if (isVerbose) {
+					System.out.println("found method at line " + lines.getCurrentIndex() );
+				}
 				String definition = TextUtil.replace( lines.getNext(), "&nbsp;", " " ).trim();
 				while ( definition.indexOf("</PRE>") == -1) {
 					definition += " " + TextUtil.replace( lines.getNext(), "&nbsp;", " " ).trim();
@@ -497,6 +541,9 @@ public final class Doc2Java extends Object {
 						break;
 					}
 				} // loop within variable definition
+				if (isVerbose) {
+					System.out.println("found method: " + method);
+				}
 				model.addMethod(method);
 				numberOfMethods++;
 				if (exit || line.indexOf( endTag ) != -1) {

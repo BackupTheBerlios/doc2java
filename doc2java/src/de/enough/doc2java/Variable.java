@@ -46,4 +46,8 @@ class Variable {
 		}
 		return lines;
 	}
+	
+	public String toString() {
+		return this.definition + ( this.value == null ? "" : "=" + this.value);
+	}
 }
