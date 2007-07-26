@@ -169,6 +169,7 @@ public final class Doc2Java extends Object {
 		System.out.println("    -o/--output:     the directory where to write the java files, defaults to the current directory.");
 		System.out.println("    --notodo:        write no todo tags into the files.");
 		System.out.println("    --todotag:       use the given to-do-tag, defaults to //TODO. Example: [--todotag \"//TODO rob\"].");
+		System.out.println("    -v/--verbose:    print additional information.");
 		System.out.println("  Parameters:");
 		System.out.println("     file:               javadoc-file(s) or directory containing javadoc-files.");
 		System.out.println("  Example:");
