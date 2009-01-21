@@ -39,4 +39,8 @@ class StringList {
 			return line;
 		}
 	}
+	
+	public int getStartIndex() {
+		return this.startIndex;
+	}
 }

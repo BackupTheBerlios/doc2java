@@ -204,6 +204,11 @@ public final class Doc2Java extends Object {
 	throws FileNotFoundException, IOException 
 	{
 		String[] lines  = FileUtil.readTextFile(  filePath );
+		for (int i = 0; i < lines.length; i++)
+		{
+			String line = lines[i];
+			lines[i] = line.trim();
+		}
 		return new StringList( lines );
 	}
 
@@ -281,8 +286,10 @@ public final class Doc2Java extends Object {
 			}
 		}
 		if (classDefinition == null) {
+			System.out.println("extracted package name=" + packageName + ", found in line " + lines.getStartIndex() );
 			System.out.println("please report this error with the given file to robert@enough.de:");
 			throw new IllegalStateException("unable to parse class or interface definition from file [" + fileName + "].");
+			
 		}
 		boolean isInterface = false;
 		isInterface = (classDefinition.indexOf( " interface ") != -1);
